@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HibouNotes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-gray-800 p-4">
+    <h2 class="text-xl font-semibold mb-4">My Notes</h2>
+    <ul id="noteList" class="space-y-2"></ul>
+  </aside>
+
+<!-- Sidebar -->
+<aside class="w-64 bg-gray-800 p-4">
+  <h2 class="text-xl font-semibold mb-4">Folders</h2>
+  <ul id="folderList" class="space-y-2">
+    <li><button onclick="selectFolder('General')" class="text-left w-full px-2 py-1 bg-gray-700 rounded">General</button></li>
+    <li><button onclick="selectFolder('Study')" class="text-left w-full px-2 py-1 bg-gray-700 rounded">Study</button></li>
+  </ul>
+</aside>
+
+<button onclick="toggleTheme()" class="absolute top-4 right-4 bg-gray-700 text-white px-3 py-1 rounded">Toggle Theme</button>
+
+  <!-- Editor -->
+  <main class="flex-1 p-6">
+    <textarea id="noteInput" placeholder="Type your thoughts..." 
+      class="w-full h-64 bg-gray-700 text-white p-4 rounded resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+    
+    <button onclick="saveNote()" 
+      class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Save</button>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
