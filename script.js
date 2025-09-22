@@ -12,13 +12,71 @@ function saveNote() {
   input.value = "";
 }
 
-let currentFolder = 'General';
+const md = window.markdownit({ html: true });
+const editor = document.getElementById("editor");
 
-function selectFolder(folder) {
-  currentFolder = folder;
-  renderNotes();
+editor.addEventListener("input", () => {
+  const raw = editor.innerText;
+
+  // Convert Markdown to HTML
+  let html = md.render(raw);
+
+  // Render math blocks
+  html = html.replace(/\$\$(.*?)\$\$/gs, (_, math) => {
+    try {
+      return katex.renderToString(math, { displayMode: true });
+    } catch {
+      return `<code>${math}</code>`;
+    }
+  });
+
+  html = html.replace(/\$(.*?)\$/g, (_, math) => {
+    try {
+      return katex.renderToString(math, { displayMode: false });
+    } catch {
+      return `<code>${math}</code>`;
+    }
+  });
+
+  editor.innerHTML = html;
+  placeCaretAtEnd(editor);
+});
+
+// Slash commands
+editor.addEventListener("keyup", (e) => {
+  const text = editor.innerText;
+  const match = text.match(/\/(\w+)$/);
+  if (match) {
+    const cmd = match[1];
+    handleSlashCommand(cmd);
+  }
+});
+
+function handleSlashCommand(cmd) {
+  switch (cmd) {
+    case "todo":
+      insertBlock("- [ ] ");
+      break;
+    case "heading":
+      insertBlock("# ");
+      break;
+    case "math":
+      insertBlock("$$ equation $$");
+      break;
+    default:
+      break;
+  }
 }
 
-function toggleTheme() {
-  document.documentElement.classList.toggle('dark');
+function insertBlock(text) {
+  document.execCommand("insertText", false, text);
+}
+
+function placeCaretAtEnd(el) {
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(el);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
 }
